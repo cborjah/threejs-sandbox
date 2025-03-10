@@ -38,10 +38,10 @@ scene.add(cube);
 
 // Base Camera
 const camera = new THREE.PerspectiveCamera(
-    75,
-    sizes.width / sizes.height,
-    0.1,
-    100
+    75, // fov
+    sizes.width / sizes.height, // aspect
+    0.1, // near
+    100 // far
 );
 
 camera.position.z = 3;
@@ -72,7 +72,7 @@ window.addEventListener("resize", () => {
 
     // Update camera
     camera.aspect = sizes.width / sizes.height;
-    camera.updateProjectionMatrix();
+    camera.updateProjectionMatrix(); // Required for changes to take effect
 
     // Update renderer
     renderer.setSize(sizes.width, sizes.height);
