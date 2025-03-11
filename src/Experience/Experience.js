@@ -1,9 +1,12 @@
 import * as THREE from "three";
 
 import Sizes from "./Utils/Sizes";
+let instance = null;
 
 export default class Experience {
     constructor(canvas) {
+        if (instance) return instance;
+        instance = this;
         // Global access
         window.experience = this;
 
