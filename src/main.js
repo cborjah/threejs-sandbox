@@ -98,8 +98,14 @@ const tick = () => {
     // Render
     renderer.render(scene, camera);
 
-    // Call tick again on the next frame
-    window.requestAnimationFrame(tick);
+    /**
+     * requestAnimationFrame is to call the function provided on the next frame.
+     * This will be called on each frame.
+     *
+     * * Need to adapt to the framerate or else the speed of the animations will
+     * * differ based on the refresh rate of the device.
+     */
+    window.requestAnimationFrame(tick); // Call tick again on the next frame
 };
 
 tick();
