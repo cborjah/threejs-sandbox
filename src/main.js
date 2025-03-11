@@ -61,6 +61,7 @@ const renderer = new THREE.WebGLRenderer({
     antialias: true
 });
 renderer.setSize(sizes.width, sizes.height);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); // Locks pixel ratio
 
 /*************
  * Listeners *
@@ -76,7 +77,7 @@ window.addEventListener("resize", () => {
 
     // Update renderer
     renderer.setSize(sizes.width, sizes.height);
-    renderer.setPixelRatio(Math.min());
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); // Locks pixel ratio
 });
 
 /***********
