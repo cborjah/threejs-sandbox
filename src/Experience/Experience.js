@@ -1,3 +1,5 @@
+import * as THREE from "three";
+
 import Sizes from "./Utils/Sizes";
 
 export default class Experience {
@@ -11,6 +13,7 @@ export default class Experience {
         // Setup
         this.sizes = new Sizes();
         this.time = new Time();
+        this.scene = new THREE.Scene();
 
         // Window 'resize' event
         this.sizes.on("resize", () => this.resize());
