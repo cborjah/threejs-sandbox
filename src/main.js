@@ -18,8 +18,8 @@ const sizes = {
 const gui = new GUI();
 
 const parallaxParameters = {
-    enabled: false,
-    strength: 0.5
+    enabled: false
+    // strength: 0.5
 };
 
 const parallaxFolder = gui.addFolder("Parallax");
@@ -31,7 +31,9 @@ parallaxFolder.add(parallaxParameters, "enabled").onChange((value) => {
         controls.enabled = true;
     }
 });
-parallaxFolder.add({ strength: 0.5 }, "strength", 0, 1, 0.1);
+// parallaxFolder
+// .add({ strength: 0.5 }, "strength", 0, 1, 0.1)
+// .onChange((value) => (parallaxParameters.strength = value));
 
 /********
  * Base *
@@ -135,7 +137,6 @@ const tick = () => {
 
     // Parallax effect
     if (parallaxParameters.enabled) {
-        // if (parameters.getValue("enabled")) {
         const parallaxX = cursor.x;
         const parallaxY = cursor.y;
 
