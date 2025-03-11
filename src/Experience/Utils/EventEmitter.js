@@ -1,3 +1,10 @@
+/**
+ * EventEmitter can be used by any classes that need to trigger events.
+ *
+ * e.g. Signal an animation has finished, an object was clicked on, player
+ *      is out of bounds, all resources are loaded...
+ */
+
 export default class EventEmitter {
     constructor() {
         this.callbacks = {};
