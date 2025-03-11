@@ -12,6 +12,27 @@ const sizes = {
     height: window.innerHeight
 };
 
+/*************
+ * Debug GUI *
+ *************/
+const gui = new GUI();
+
+const parallaxParameters = {
+    enabled: false,
+    strength: 0.5
+};
+
+const parallaxFolder = gui.addFolder("Parallax");
+parallaxFolder.add(parallaxParameters, "enabled").onChange((value) => {
+    if (value) {
+        controls.reset(); // Reset OrbitControls in order to reset 'position'
+        controls.enabled = false;
+    } else {
+        controls.enabled = true;
+    }
+});
+parallaxFolder.add({ strength: 0.5 }, "strength", 0, 1, 0.1);
+
 /********
  * Base *
  ********/
@@ -80,20 +101,47 @@ window.addEventListener("resize", () => {
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); // Locks pixel ratio
 });
 
+window.addEventListener("mousemove", (event) => {
+    // Divide by window width and height to make values consistent regardless of the resolution
+    cursor.x = event.clientX / sizes.width - 0.5;
+    cursor.y = event.clientY / sizes.height - 0.5;
+});
+
+/**********
+ * Cursor *
+ **********/
+const cursor = {};
+cursor.x = 0;
+cursor.y = 0;
+
 /***********
  * Animate *
  ***********/
-const clock = new THREE.Clock();
-let previousTime = 0;
+// const clock = new THREE.Clock();
+// let previousTime = 0;
 
 const tick = () => {
-    const elapsedTime = clock.getElapsedTime();
-    const deltaTime = elapsedTime - previousTime;
+    // const elapsedTime = clock.getElapsedTime();
+    // const deltaTime = elapsedTime - previousTime;
 
-    previousTime = elapsedTime;
+    // previousTime = elapsedTime;
 
     // Update controls
-    controls.update();
+    if (!parallaxParameters.enabled) {
+        // If controls are disabled, parallax enabled in this case, don't call the update method. It will interfere with the parallax effect.
+        // Update method required if damping or autoRotate is set to true
+        controls.update();
+    }
+
+    // Parallax effect
+    if (parallaxParameters.enabled) {
+        // if (parameters.getValue("enabled")) {
+        const parallaxX = cursor.x;
+        const parallaxY = cursor.y;
+
+        camera.position.x = parallaxX;
+        camera.position.y = -parallaxY;
+    }
 
     // Render
     renderer.render(scene, camera);
