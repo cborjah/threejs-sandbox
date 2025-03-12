@@ -9,7 +9,7 @@ export default class Debug {
         this.active = window.location.hash === "#debug";
 
         if (this.active) {
-            const gui = new GUI();
+            this.gui = new GUI();
         }
     }
 }
