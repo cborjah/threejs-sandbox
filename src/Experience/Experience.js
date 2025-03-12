@@ -1,8 +1,9 @@
 import * as THREE from "three";
 
+import Camera from "./Camera";
+import Renderer from "./Renderer";
+import Time from "./Utils/Time";
 import Sizes from "./Utils/Sizes";
-import Camera from "./Utils/Camera";
-import Renderer from "./Utils/Renderer";
 import Debug from "./Utils/Debug";
 
 let instance = null;
