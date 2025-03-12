@@ -9,9 +9,27 @@ export default class Camera {
         this.sizes = this.experience.sizes;
         this.scene = this.experience.scene;
         this.canvas = this.experience.canvas;
+        this.cursor = this.experience.cursor;
+
+        // Parallax effect
+        this.parallax = {
+            enabled: false
+        };
 
         this.setInstance();
         this.setControls();
+
+        // Debug
+        this.debug = this.experience.debug;
+
+        if (this.debug.active) {
+            this.setParallaxDebugOptions();
+        }
+
+        // window.addEventListener("mousemove", (event) => {
+        //     this.cursor.setX(event.clientX / this.sizes.width - 0.5);
+        //     this.cursor.setY(event.clientY / this.sizes.height - 0.5);
+        // });
     }
 
     setInstance() {
@@ -33,12 +51,60 @@ export default class Camera {
         this.controls.enableDamping = true;
     }
 
+    setMousemoveListener() {
+        this.unsubscribeMousemove = window.addEventListener(
+            "mousemove",
+            (event) => {
+                console.log("mousemove listener added!");
+                this.cursor.setX(event.clientX / this.sizes.width - 0.5);
+                this.cursor.setY(event.clientY / this.sizes.height - 0.5);
+            }
+        );
+    }
+
+    removeMousemoveListener() {
+        if (this.unsubscribeMousemove) {
+            this.unsubscribeMousemove();
+        }
+    }
+
+    setParallaxDebugOptions() {
+        this.debugParallaxFolder = this.debug.gui.addFolder("Parallax");
+
+        this.debugParallaxFolder
+            .add(this.parallax, "enabled")
+            .onChange((value) => {
+                if (value) {
+                    this.controls.reset();
+                    this.controls.enabled = false;
+
+                    this.setMousemoveListener();
+                } else {
+                    this.controls.enabled = true;
+
+                    this.removeMousemoveListener();
+                }
+            });
+    }
+
+    animateParallax() {
+        const parallaxX = this.cursor.x;
+        const parallaxY = this.cursor.y;
+
+        this.instance.position.x = parallaxX;
+        this.instance.position.y = -parallaxY;
+    }
+
     resize() {
         this.instance.aspect = this.sizes.width / this.sizes.height;
         this.instance.updateProjectionMatrix();
     }
 
     update() {
-        this.controls.update();
+        if (!this.parallax.enabled) {
+            this.controls.update();
+        } else {
+            this.animateParallax();
+        }
     }
 }
