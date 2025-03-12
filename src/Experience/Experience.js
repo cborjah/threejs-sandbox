@@ -2,6 +2,7 @@ import * as THREE from "three";
 
 import Sizes from "./Utils/Sizes";
 import Camera from "./Utils/Camera";
+import Renderer from "./Utils/Renderer";
 
 let instance = null;
 
@@ -21,6 +22,7 @@ export default class Experience {
         this.time = new Time();
         this.scene = new THREE.Scene();
         this.camera = new Camera();
+        this.renderer = new Renderer();
 
         // Window 'resize' event
         this.sizes.on("resize", () => this.resize());
@@ -31,10 +33,12 @@ export default class Experience {
 
     resize() {
         this.camera.resize();
+        this.renderer.resize();
     }
 
     update() {
         // Update camera controls (damping is ON)
         this.camera.update();
+        this.renderer.update();
     }
 }
