@@ -43,7 +43,7 @@ const experience = new Experience(document.querySelector("canvas.webgl"));
  ********/
 
 // Canvas
-const canvas = document.querySelector("canvas.webgl");
+// const canvas = document.querySelector("canvas.webgl");
 
 // Scene
 // const scene = new THREE.Scene();
@@ -125,39 +125,39 @@ const canvas = document.querySelector("canvas.webgl");
 // const clock = new THREE.Clock();
 // let previousTime = 0;
 
-const tick = () => {
-    // const elapsedTime = clock.getElapsedTime();
-    // const deltaTime = elapsedTime - previousTime;
+// const tick = () => {
+// const elapsedTime = clock.getElapsedTime();
+// const deltaTime = elapsedTime - previousTime;
 
-    // previousTime = elapsedTime;
+// previousTime = elapsedTime;
 
-    // Update controls
-    if (!parallaxParameters.enabled) {
-        // If controls are disabled, parallax enabled in this case, don't call the update method. It will interfere with the parallax effect.
-        // Update method required if damping or autoRotate is set to true
-        controls.update();
-    }
+// Update controls
+// if (!parallaxParameters.enabled) {
+// If controls are disabled, parallax enabled in this case, don't call the update method. It will interfere with the parallax effect.
+// Update method required if damping or autoRotate is set to true
+// controls.update();
+// }
 
-    // Parallax effect
-    if (parallaxParameters.enabled) {
-        const parallaxX = cursor.x;
-        const parallaxY = cursor.y;
+// Parallax effect
+// if (parallaxParameters.enabled) {
+// const parallaxX = cursor.x;
+// const parallaxY = cursor.y;
+//
+// camera.position.x = parallaxX;
+// camera.position.y = -parallaxY;
+// }
 
-        camera.position.x = parallaxX;
-        camera.position.y = -parallaxY;
-    }
+// Render
+// renderer.render(scene, camera);
 
-    // Render
-    // renderer.render(scene, camera);
-
-    /**
-     * requestAnimationFrame is to call the function provided on the next frame.
-     * This will be called on each frame.
-     *
-     * * Need to adapt to the framerate or else the speed of the animations will
-     * * differ based on the refresh rate of the device.
-     */
-    // window.requestAnimationFrame(tick); // Call tick again on the next frame
-};
+/**
+ * requestAnimationFrame is to call the function provided on the next frame.
+ * This will be called on each frame.
+ *
+ * * Need to adapt to the framerate or else the speed of the animations will
+ * * differ based on the refresh rate of the device.
+ */
+// window.requestAnimationFrame(tick); // Call tick again on the next frame
+// };
 
 // tick();
