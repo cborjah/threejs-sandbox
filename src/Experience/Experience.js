@@ -5,6 +5,7 @@ import Renderer from "./Renderer";
 import Time from "./Utils/Time";
 import Sizes from "./Utils/Sizes";
 import Debug from "./Utils/Debug";
+import World from "./World/World";
 
 let instance = null;
 
@@ -26,6 +27,7 @@ export default class Experience {
         this.scene = new THREE.Scene();
         this.camera = new Camera();
         this.renderer = new Renderer();
+        this.world = new World();
 
         // Window 'resize' event
         this.sizes.on("resize", () => this.resize());
