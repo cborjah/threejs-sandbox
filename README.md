@@ -15,7 +15,7 @@ npm run dev
 npm run build
 ```
 
-# EventEmitter Class Documentation
+# EventEmitter Class
 
 ## Purpose
 
@@ -82,7 +82,14 @@ Removes one or more event listeners based on the provided event names.
 **Usage:**
 
 ```javascript
+export default class Experience {
+    // ...
 
+    destroy() {
+        this.sizes.off("resize");
+        this.time.off("tick");
+    }
+}
 ```
 
 ---
