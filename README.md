@@ -23,13 +23,7 @@ The `EventEmitter` class provides a flexible and powerful mechanism for event ha
 
 This class can be particularly useful for scenarios where different parts of an application need to communicate without being tightly coupled. By using event listeners and triggers, the `EventEmitter` allows seamless notification when specific events occur.
 
-## Use Cases
-
--   **Animation Lifecycle**: Signal when an animation has started, completed, or been interrupted.
--   **User Interactions**: Notify when an object has been clicked or hovered over.
--   **Game State Management**: Inform when a player is out of bounds, wins, or loses.
--   **Resource Loading**: Trigger events when all assets, data, or resources are fully loaded.
--   **Custom UI Components**: Handle custom component events like opening, closing, or refreshing.
+This gives the event system a flexible way to group related events into namespaces, like "ui", "network", "animation", etc. So when you remove events, you could target an entire namespace or a specific event inside it.
 
 ## Methods
 
@@ -56,7 +50,19 @@ Registers a callback function for the specified event or events.
 **Usage:**
 
 ```javascript
+// Experience class
+constructor() {
+    //...
 
+    // Pass Experience's 'resize' method as a callback for when the 'trigger'
+    // method is invoked within classes extending the EventEmitter class.
+    this.sizes.on("resize", () => this.resize());
+}
+
+resize() {
+    this.camera.resize();
+    this.renderer.resize();
+}
 ```
 
 ---
@@ -76,8 +82,7 @@ Removes one or more event listeners based on the provided event names.
 **Usage:**
 
 ```javascript
-emitter.off("animationComplete");
-emitter.off("player.outOfBounds");
+
 ```
 
 ---
@@ -98,15 +103,28 @@ Invokes all callbacks associated with a specified event.
 **Usage:**
 
 ```javascript
-emitter.trigger("animationComplete", [animationId]);
-emitter.trigger("player.outOfBounds", [player]);
+// Sizes class
+constructor() {
+    //...
+
+    window.addEventListener("resize", () => {
+        this.width = window.innerWidth;
+        this.height = window.innerHeight;
+        this.pixelRatio = Math.min(window.devicePixelRatio, 2);
+
+        // Trigger all callbacks tied to 'resize' event
+        this.trigger("resize");
+    });
+}
+
+
 ```
 
 ---
 
 ### `resolveNames(_names)`
 
-Parses and cleans up the provided event names.
+Takes a string of event names, parses, cleans, and places them into an array of individual event names.
 
 **Parameters:**
 
@@ -115,6 +133,13 @@ Parses and cleans up the provided event names.
 **Returns:**
 
 -   `Array<string>`: An array of cleaned event names.
+
+**Example:**
+
+```javascript
+resolveNames("event1, event2/event3");
+// Output: ["event1", "event2", "event3"]
+```
 
 ---
 
@@ -130,12 +155,14 @@ Splits an event name into its value and namespace.
 
 -   `Object`: An object containing `original`, `value`, and `namespace` properties.
 
-**Usage:**
+**Example:**
 
 ```javascript
-const resolved = emitter.resolveName("player.outOfBounds");
-console.log(resolved);
-// { original: 'player.outOfBounds', value: 'player', namespace: 'outOfBounds' }
+resolveName("click.ui");
+// Output: { original: "click.ui", value: "click", namespace: "ui" }
+
+resolveName("hover");
+// Output: { original: "hover", value: "hover", namespace: "base" }
 ```
 
 ---
@@ -145,16 +172,18 @@ console.log(resolved);
 ```javascript
 const emitter = new EventEmitter();
 
-// Register an event listener
-emitter.on("animationComplete", (id) => {
-    console.log(`Animation ${id} finished`);
-});
+function onClick() {
+    console.log("Click event triggered");
+}
 
-// Trigger the event
-emitter.trigger("animationComplete", [42]);
+emitter.on("click.ui", onClick);
+emitter.on("hover", () => console.log("Hover event triggered"));
 
-// Remove the event listener
-emitter.off("animationComplete");
+// After the code above is executed, this.callbacks will look like:
+{
+    ui: { click: [onClick] },
+    base: { hover: [/* hover callback */] }
+}
 ```
 
 ## Notes
