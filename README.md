@@ -9,7 +9,7 @@ Personal playground for experimenting with 3D web development, testing out new f
 npm i
 
 # Run the local server
-npx vite
+npm run dev
 
 # Build for production in dist/ directory
 npm run build
