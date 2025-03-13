@@ -1,5 +1,7 @@
 # Three.js Sandbox
 
+Personal playground for experimenting with 3D web development, testing out new features, and practicing with Three.js and related libraries. Used for prototyping ideas, exploring creative visualizations, and deepening my understanding of 3D modeling and rendering.
+
 ## Setup
 
 ```bash
