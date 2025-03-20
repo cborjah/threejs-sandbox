@@ -36,7 +36,7 @@ export default class World {
         this.debugWorldFolder
             .add(this.worldDebugOptions, "particles")
             .onChange((isEnabled) => {
-                if (isEnabled) {
+                if (isEnabled & this.resources.isLoaded) {
                     this.particles = new Particles();
                 } else if (this.particles) {
                     this.particles.destroy();
