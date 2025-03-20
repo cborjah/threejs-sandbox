@@ -42,6 +42,9 @@ export default class Particles {
 
         // Enables layering of several things together without creating z-index artifacts
         this.particlesMaterial.depthWrite = false; // Tell WebGL not to write particles in depth buffer
+
+        // Blending adds the color of overlapping pixels
+        this.particlesMaterial.blending = THREE.AdditiveBlending;
     }
     setPoints() {
         this.particles = new THREE.Points(
