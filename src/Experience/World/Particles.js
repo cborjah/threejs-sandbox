@@ -34,7 +34,11 @@ export default class Particles {
         this.particlesMaterial = new THREE.PointsMaterial();
         this.particlesMaterial.size = 0.02;
         this.particlesMaterial.sizeAttenuation = true;
-        this.particlesMaterial.map = this.resources.items.particleTexture1;
+
+        // Enable transparency and set alphaMap to remove black areas in texture
+        // this.particlesMaterial.map = this.resources.items.particleTexture1;
+        this.particlesMaterial.transparent = true;
+        this.particlesMaterial.alphaMap = this.resources.items.particleTexture1;
     }
     setPoints() {
         this.particles = new THREE.Points(
