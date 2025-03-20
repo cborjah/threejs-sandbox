@@ -39,6 +39,9 @@ export default class Particles {
         // this.particlesMaterial.map = this.resources.items.particleTexture1;
         this.particlesMaterial.transparent = true;
         this.particlesMaterial.alphaMap = this.resources.items.particleTexture1;
+
+        // Enables layering of several things together without creating z-index artifacts
+        this.particlesMaterial.depthWrite = false; // Tell WebGL not to write particles in depth buffer
     }
     setPoints() {
         this.particles = new THREE.Points(
