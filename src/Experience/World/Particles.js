@@ -5,6 +5,7 @@ export default class Particles {
     constructor() {
         this.experience = new Experience();
         this.scene = this.experience.scene;
+        this.resources = this.experience.resources;
 
         // Setup
         this.setGeometry();
@@ -33,6 +34,7 @@ export default class Particles {
         this.particlesMaterial = new THREE.PointsMaterial();
         this.particlesMaterial.size = 0.02;
         this.particlesMaterial.sizeAttenuation = true;
+        this.particlesMaterial.map = this.resources.items.particleTexture1;
     }
     setPoints() {
         this.particles = new THREE.Points(
