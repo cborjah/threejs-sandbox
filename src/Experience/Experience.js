@@ -7,6 +7,8 @@ import Sizes from "./Utils/Sizes";
 import Cursor from "./Utils/Cursor";
 import Debug from "./Utils/Debug";
 import World from "./World/World";
+import Resources from "./Utils/Resources";
+import sources from "../sources";
 
 let instance = null;
 
@@ -27,6 +29,7 @@ export default class Experience {
         this.time = new Time();
         this.cursor = new Cursor();
         this.scene = new THREE.Scene();
+        this.resources = new Resources(sources); // NOTE: Must be initiated immediately after scene is initiated
         this.camera = new Camera();
         this.renderer = new Renderer();
         this.world = new World();
