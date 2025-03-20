@@ -7,6 +7,7 @@ import Sizes from "./Utils/Sizes";
 import Cursor from "./Utils/Cursor";
 import Debug from "./Utils/Debug";
 import World from "./World/World";
+import Particles from "./World/Particles";
 
 let instance = null;
 
@@ -30,6 +31,7 @@ export default class Experience {
         this.camera = new Camera();
         this.renderer = new Renderer();
         this.world = new World();
+        this.particles = new Particles();
 
         // Window 'resize' event
         this.sizes.on("resize", () => this.resize());
