@@ -46,6 +46,7 @@ export default class Particles {
         // Blending adds the color of overlapping pixels
         this.particlesMaterial.blending = THREE.AdditiveBlending;
     }
+
     setPoints() {
         this.particles = new THREE.Points(
             this.particlesGeometry,
@@ -53,5 +54,14 @@ export default class Particles {
         );
 
         this.scene.add(this.particles);
+    }
+
+    destroy() {
+        this.scene.remove(this.particles);
+
+        this.particles.geometry.dispose();
+        this.particles.material.dispose();
+
+        this.particles = null;
     }
 }
