@@ -11,7 +11,7 @@ export default class World {
         // Debug
         this.debug = this.experience.debug;
 
-        if (this.debug) {
+        if (this.debug.active) {
             this.setDebugFolders();
         }
 
