@@ -17,12 +17,6 @@ export default class World {
 
         // Setup
         this.box = new Box();
-
-        // this.resources.on("ready", () => {
-        // if (this.worldDebugOptions.particles) {
-        // this.particles = new Particles();
-        // }
-        // });
     }
 
     setDebugFolders() {
