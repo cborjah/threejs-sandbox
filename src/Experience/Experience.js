@@ -50,6 +50,9 @@ export default class Experience {
         // Update camera controls (damping is ON)
         this.camera.update();
         this.renderer.update();
+
+        // Update physics world
+        this.world.step();
     }
 
     destroy() {
