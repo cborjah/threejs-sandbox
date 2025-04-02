@@ -3,9 +3,12 @@ import * as THREE from "three";
 import Experience from "../Experience";
 
 export default class Box {
-    constructor() {
+    constructor(position) {
         this.experience = new Experience();
         this.scene = this.experience.scene;
+
+        this.dimensions = [1, 1, 1];
+        this.position = position || [0, 0, 0];
 
         // Setup
         this.setGeometry();
@@ -14,7 +17,7 @@ export default class Box {
     }
 
     setGeometry() {
-        this.geometry = new THREE.BoxGeometry(1, 1, 1);
+        this.geometry = new THREE.BoxGeometry(...this.dimensions);
     }
 
     setMaterial() {
@@ -23,6 +26,8 @@ export default class Box {
 
     setMesh() {
         this.mesh = new THREE.Mesh(this.geometry, this.material);
+        this.mesh.position.set(...this.position);
+
         this.scene.add(this.mesh);
     }
 }
