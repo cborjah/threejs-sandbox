@@ -2,6 +2,7 @@ import * as THREE from "three";
 import Experience from "../Experience";
 import Box from "./Box";
 import Particles from "./Particles";
+import PhysicsBox from "./PhysicsBox";
 
 export default class World {
     constructor() {
@@ -44,6 +45,11 @@ export default class World {
                 }
             });
     }
+
+    initializeObjects() {
+        this.physicsBox = new PhysicsBox([0, 1, 0]);
+    }
+
     async loadRapier() {
         const RAPIER = await import("@dimforge/rapier3d");
 
@@ -61,6 +67,8 @@ export default class World {
     step() {
         if (this.rapier) {
             this.rapier.step();
+
+            this.physicsBox?.animate();
         }
     }
 }
