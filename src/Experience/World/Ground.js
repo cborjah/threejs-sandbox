@@ -3,9 +3,9 @@ import RAPIER from "@dimforge/rapier3d";
 import Experience from "../Experience";
 
 export default class Ground {
-    constructor(dimensions, position, physics = false) {
+    constructor({ dimensions, position, physics = false } = {}) {
         if (!dimensions) {
-            throw new Error("Unable to create Ground: missing dimensions...");
+            throw new Error("Unable to create Ground, missing dimensions...");
         }
 
         this.experience = new Experience();
