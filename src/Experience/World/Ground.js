@@ -3,7 +3,7 @@ import RAPIER from "@dimforge/rapier3d";
 import Experience from "../Experience";
 
 export default class Ground {
-    constructor({ dimensions, position, physics = false } = {}) {
+    constructor({ dimensions, position = [0, 0, 0], physics = false } = {}) {
         if (!dimensions) {
             throw new Error("Unable to create Ground, missing dimensions...");
         }
@@ -13,7 +13,7 @@ export default class Ground {
         this.world = this.experience.world;
 
         this.dimensions = dimensions;
-        this.position = position ?? [0, 0, 0];
+        this.position = position;
         this.physics = physics;
 
         // Setup
