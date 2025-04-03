@@ -3,6 +3,7 @@ import Experience from "../Experience";
 import Box from "./Box";
 import Particles from "./Particles";
 import PhysicsBox from "./PhysicsBox";
+import Ground from "./Ground";
 
 export default class World {
     constructor() {
@@ -48,6 +49,11 @@ export default class World {
 
     initializeObjects() {
         this.physicsBox = new PhysicsBox([0, 1, 0]);
+        this.ground = new Ground({
+            dimensions: [100, 1, 100],
+            position: [0, -1, 0],
+            physics: true
+        });
     }
 
     async loadRapier() {
