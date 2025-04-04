@@ -2,8 +2,8 @@ import * as THREE from "three";
 import Experience from "../Experience";
 import Box from "./Box";
 import Particles from "./Particles";
-import PhysicsBox from "./PhysicsBox";
 import Ground from "./Ground";
+import Sphere from "./Sphere";
 
 export default class World {
     constructor() {
@@ -48,7 +48,18 @@ export default class World {
     }
 
     initializeObjects() {
-        this.physicsBox = new PhysicsBox([0, 1, 0]);
+        /* this.box = new Box({
+            dimensions: [1, 1, 1],
+            position: [0, 1, 0],
+            physics: true
+        }); */
+
+        this.sphere = new Sphere({
+            radius: 0.5,
+            position: [0, 1, 0],
+            physics: true
+        });
+
         this.ground = new Ground({
             dimensions: [100, 1, 100],
             position: [0, -1, 0],
@@ -74,7 +85,9 @@ export default class World {
         if (this.rapier) {
             this.rapier.step();
 
-            this.physicsBox?.animate();
+            this.box?.animate();
+            this.sphere?.animate();
+
         }
     }
 }
