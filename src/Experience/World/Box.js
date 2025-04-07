@@ -49,6 +49,7 @@ export default class Box {
                 .setTranslation(...this.position)
                 .setCanSleep(false)
         );
+        this.mesh.userData.rigidBody = this.rigidBody;
     }
 
     setCollider() {
@@ -57,6 +58,7 @@ export default class Box {
         this.collider = RAPIER.ColliderDesc.cuboid(...colliderDimensions)
             .setMass(1)
             .setRestitution(1.1);
+        this.mesh.userData.collider = this.collider;
 
         this.world.rapier.createCollider(this.collider, this.rigidBody);
     }
