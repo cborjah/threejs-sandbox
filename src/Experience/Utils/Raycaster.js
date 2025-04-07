@@ -44,14 +44,6 @@ export default class Raycaster {
                 rigidBody.translation()
             );
             const direction = rigidBodyPosition.sub(point);
-            /* const direction = new RAPIER.Vector3(
-                rigidBodyPosition.x - point.x,
-                rigidBodyPosition.y - point.y,
-                rigidBodyPosition.z - point.z
-            ); */
-
-            // NOTE: Fixed joint doesn't work...
-            // const jointParams = RAPIER.JointData.fixed(
 
             const jointParams = RAPIER.JointData.spherical(
                 new RAPIER.Vector3(0, 0, 0),

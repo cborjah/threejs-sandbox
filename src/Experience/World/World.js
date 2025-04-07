@@ -108,62 +108,6 @@ export default class World {
         );
 
         this.initializeObjects();
-
-        /* const floorMesh = new THREE.Mesh(
-            new THREE.BoxGeometry(100, 1, 100),
-            new THREE.MeshPhongMaterial()
-        );
-        floorMesh.receiveShadow = true;
-        floorMesh.position.y = -1;
-        this.scene.add(floorMesh);
-
-        const floorBody = this.rapier.createRigidBody(
-            RAPIER.RigidBodyDesc.fixed().setTranslation(0, -1, 0)
-        );
-        const floorShape = RAPIER.ColliderDesc.cuboid(50, 0.5, 50);
-        this.rapier.createCollider(floorShape, floorBody); */
-
-        // Ground
-        // this.groundRigidBody = RAPIER.RigidBodyDesc.fixed();
-        // this.groundColliderDesc = RAPIER.ColliderDesc.cuboid(10.0, 0.1, 10.0);
-        // this.world.createCollider(this.groundColliderDesc);
-
-        /*         this.cubeMesh = new THREE.Mesh(
-            new THREE.BoxGeometry(1, 1, 1),
-            new THREE.MeshNormalMaterial()
-        );
-        this.cubeMesh.castShadow = true;
-        this.cubeMesh.position.y = 1;
-        this.scene.add(this.cubeMesh);
-
-        this.cubeBody = this.rapier.createRigidBody(
-            RAPIER.RigidBodyDesc.dynamic()
-                .setTranslation(0, 1, 0)
-                .setCanSleep(false)
-        );
-
-        this.cubeShape = RAPIER.ColliderDesc.cuboid(0.5, 0.5, 0.5)
-            .setMass(1)
-            // .setTranslation(0, 1, 0)
-            .setRestitution(1.1);
-        this.rapier.createCollider(this.cubeShape, this.cubeBody); */
-
-        // dynamicBodies.push([cubeMesh, cubeBody]);
-
-        // const floorMesh = new THREE.Mesh(
-        //     new THREE.BoxGeometry(100, 1, 100),
-        //     new THREE.MeshPhongMaterial()
-        // );
-        // floorMesh.receiveShadow = true;
-        // floorMesh.position.y = -1;
-        // this.scene.add(floorMesh);
-        // const floorBody = this.world.createRigidBody(
-        //     RAPIER.RigidBodyDesc.fixed().setTranslation(0, -1, 0)
-        // );
-        // const floorShape = RAPIER.ColliderDesc.cuboid(50, 0.5, 50);
-        // this.world.createCollider(floorShape, floorBody);
-        //
-        // this.ground = this.world.createRigidBody(this.groundRigidBody);
     }
 
     step() {
@@ -172,11 +116,6 @@ export default class World {
 
             this.box?.animate();
             this.sphere?.animate();
-
-            // this.cubeMesh.position.copy(this.cubeBody.translation());
-
-            // let position = this.ground.translation();
-            // console.log("rigid body position: ", position.x);
         }
     }
 }
