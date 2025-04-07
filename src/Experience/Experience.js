@@ -9,6 +9,7 @@ import Debug from "./Utils/Debug";
 import World from "./World/World";
 import Resources from "./Utils/Resources";
 import sources from "../sources";
+import Raycaster from "./Utils/Raycaster";
 
 let instance = null;
 
@@ -33,6 +34,7 @@ export default class Experience {
         this.camera = new Camera();
         this.renderer = new Renderer();
         this.world = new World();
+        this.raycaster = new Raycaster();
 
         // Window 'resize' event
         this.sizes.on("resize", () => this.resize());
