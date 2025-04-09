@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { DragControls } from "three/addons/controls/DragControls";
 import Experience from "../Experience";
 import Box from "./Box";
 import Particles from "./Particles";
@@ -34,13 +35,36 @@ export default class World {
         this.experience = new Experience();
         this.resources = this.experience.resources;
         this.scene = this.experience.scene;
-        this.intersectableObjects = [];
+        this.camera = this.experience.camera.instance;
+        this.renderer = this.experience.renderer;
+
+        this._draggableObjects = [];
 
         this.rapier = null;
         this.grabberBody = null;
 
         // Load physics engine
         this.loadRapier();
+
+        // Initialize drag controls
+        this._dragControls = new DragControls(
+            this._draggableObjects,
+            this.camera,
+            this.renderer.canvas
+        );
+
+        this._dragControls.addEventListener("dragstart", (event) => {
+            const mesh = event.object;
+            mesh.userData.rigidBody.setEnabled(false); // Disable physics to prevent mesh from snapping back to the rigid body
+        });
+
+        this._dragControls.addEventListener("dragend", (event) => {
+            const mesh = event.object;
+            const rigidBody = mesh.userData.rigidBody;
+
+            rigidBody.setTranslation(mesh.position, true); // Snap physics body to mesh
+            rigidBody.setEnabled(true); // Re-enable physics
+        });
 
         // Debug
         this.debug = this.experience.debug;
@@ -83,8 +107,7 @@ export default class World {
             physics: true
         });
 
-        this.intersectableObjects.push(this.sphere);
-        console.log(this.sphere);
+        this._draggableObjects.push(this.sphere.mesh);
 
         this.ground = new Ground({
             dimensions: [100, 1, 100],
@@ -111,10 +134,12 @@ export default class World {
     }
 
     step() {
+        this._dragControls.update();
+
         if (this.rapier) {
             this.rapier.step();
 
-            this.box?.animate();
+            // this.box?.animate();
             this.sphere?.animate();
         }
     }

@@ -76,6 +76,8 @@ export default class Sphere {
     }
 
     animate() {
-        this.mesh.position.copy(this.rigidBody.translation());
+        if (this.rigidBody.isEnabled()) {
+            this.mesh.position.copy(this.rigidBody.translation());
+        }
     }
 }
