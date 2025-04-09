@@ -1,34 +1,10 @@
-import * as THREE from "three";
 import { DragControls } from "three/addons/controls/DragControls";
+
 import Experience from "../Experience";
-import Box from "./Box";
+// import Box from "./Box";
 import Particles from "./Particles";
 import Ground from "./Ground";
 import Sphere from "./Sphere";
-
-/**
- * When is an object considered clicked and held?
- *
- * Using a raycaster attached to the mouse, a ray can
- * be casted upon mouse click.
- *
- *  TODO: Where do I add the click event to the window?
- *       In Experience or Time?
- *       Should the Raycaster be its own class?
- *
- *  NOTE: Build out feature first, then refactor once you have
- *        it working.
- *
- * If an object is intersected:
- *  - add a fixed joint at the point of intersection (Rapier.js)
- *  - add the object to an 'intersects' array
- *
- *  If an object has been clicked, listen for the mouseup
- *  event. This event handler will remove replace
- *  the 'intersects' variable with an EMPTY array.
- *
- *  Remove joint.
- */
 
 export default class World {
     constructor() {
