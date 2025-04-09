@@ -36,13 +36,13 @@ export default class World {
     _setDebugFolders() {
         this.debugWorldFolder = this.debug.gui.addFolder("World");
 
-        this.worldDebugOptions = {
+        const worldDebugOptions = {
             box: true,
             particles: false
         };
 
         this.debugWorldFolder
-            .add(this.worldDebugOptions, "particles")
+            .add(worldDebugOptions, "particles")
             .onChange((isEnabled) => {
                 if (isEnabled & this.resources.isLoaded) {
                     this.particles = new Particles();
