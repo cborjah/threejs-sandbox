@@ -6,6 +6,8 @@ import Particles from "./Particles";
 import Ground from "./Ground";
 import Sphere from "./Sphere";
 
+const _draggableObjects = [];
+
 export default class World {
     constructor() {
         this.experience = new Experience();
@@ -14,43 +16,24 @@ export default class World {
         this.camera = this.experience.camera.instance;
         this.renderer = this.experience.renderer;
 
-        this._draggableObjects = [];
-
         this.rapier = null;
         this.grabberBody = null;
 
         // Load physics engine
-        this.loadRapier();
+        this._loadRapier();
 
-        // Initialize drag controls
-        this._dragControls = new DragControls(
-            this._draggableObjects,
-            this.camera,
-            this.renderer.canvas
-        );
-
-        this._dragControls.addEventListener("dragstart", (event) => {
-            const mesh = event.object;
-            mesh.userData.rigidBody.setEnabled(false); // Disable physics to prevent mesh from snapping back to the rigid body
-        });
-
-        this._dragControls.addEventListener("dragend", (event) => {
-            const mesh = event.object;
-            const rigidBody = mesh.userData.rigidBody;
-
-            rigidBody.setTranslation(mesh.position, true); // Snap physics body to mesh
-            rigidBody.setEnabled(true); // Re-enable physics
-        });
+        // Controls
+        this._initializeDragControls();
 
         // Debug
         this.debug = this.experience.debug;
 
         if (this.debug.active) {
-            this.setDebugFolders();
+            this._setDebugFolders();
         }
     }
 
-    setDebugFolders() {
+    _setDebugFolders() {
         this.debugWorldFolder = this.debug.gui.addFolder("World");
 
         this.worldDebugOptions = {
@@ -70,7 +53,28 @@ export default class World {
             });
     }
 
-    initializeObjects() {
+    _initializeDragControls() {
+        this._dragControls = new DragControls(
+            _draggableObjects,
+            this.camera,
+            this.renderer.canvas
+        );
+
+        this._dragControls.addEventListener("dragstart", (event) => {
+            const mesh = event.object;
+            mesh.userData.rigidBody.setEnabled(false); // Disabling the rigidBody prevents the mesh from copying the rigidBody's position.
+        });
+
+        this._dragControls.addEventListener("dragend", (event) => {
+            const mesh = event.object;
+            const rigidBody = mesh.userData.rigidBody;
+
+            rigidBody.setTranslation(mesh.position, true); // Snap physics body to mesh
+            rigidBody.setEnabled(true); // Re-enable physics
+        });
+    }
+
+    _initializeObjects() {
         /* this.box = new Box({
             dimensions: [1, 1, 1],
             position: [0, 1, 0],
@@ -83,7 +87,7 @@ export default class World {
             physics: true
         });
 
-        this._draggableObjects.push(this.sphere.mesh);
+        _draggableObjects.push(this.sphere.mesh);
 
         this.ground = new Ground({
             dimensions: [100, 1, 100],
@@ -92,9 +96,8 @@ export default class World {
         });
     }
 
-    async loadRapier() {
+    async _loadRapier() {
         const RAPIER = await import("@dimforge/rapier3d");
-
         const gravity = {
             x: 0.0,
             y: -9.81,
@@ -106,7 +109,7 @@ export default class World {
             RAPIER.RigidBodyDesc.kinematicPositionBased()
         );
 
-        this.initializeObjects();
+        this._initializeObjects();
     }
 
     step() {
