@@ -4,6 +4,10 @@ import Experience from "../Experience";
 import RAPIER from "@dimforge/rapier3d";
 
 export default class Raycaster {
+    // TODO: Convert variables to PRIVATE
+    //       Add _ to private methods
+    //       Add JSDoc comments
+
     constructor() {
         this.experience = new Experience();
         this.scene = this.experience.scene;
@@ -13,27 +17,71 @@ export default class Raycaster {
         this.camera = this.experience.camera;
 
         this.raycaster = new THREE.Raycaster();
-        this.pointer = new THREE.Vector2();
-        this.currentIntersect = null;
-        this.jointHandle = null;
+        this.pointer = new THREE.Vector2(); // Mouse pointer's x and y coordinates
+        this.currentIntersect = null; // First intersection made by ray
+        this.jointHandle = null; // Impulse joint
+        this.isDragging = false;
+        this.dragPlane = new THREE.Plane();
+        this.offset = new THREE.Vector3();
+        this.intersection = new THREE.Vector3();
 
-        window.addEventListener("mousemove", this._handleMouseMove.bind(this));
-        window.addEventListener("click", this._handleClick.bind(this));
+        window.addEventListener("mousemove", this.handleMouseMove.bind(this));
+        window.addEventListener("mousedown", this.handleClick.bind(this));
+        window.addEventListener("mouseup", this.handleMouseUp.bind(this));
 
-        this.time.on("tick", this._checkRaycaster.bind(this));
+        this.time.on("tick", this.checkRaycaster.bind(this));
     }
 
-    _handleMouseMove(event) {
+    handleMouseMove(event) {
         this.pointer.x = (event.clientX / this.sizes.width) * 2 - 1;
         this.pointer.y = -(event.clientY / this.sizes.height) * 2 + 1;
+
+        if (
+            this.isDragging &&
+            this.raycaster.ray.intersectPlane(this.dragPlane, this.intersection)
+        ) {
+            this.currentIntersect.object.position.copy(
+                // this.currentIntersect.object.userData.rigidBody.position.copy(
+                this.intersection.sub(this.offset)
+            );
+        }
     }
 
-    _handleClick(event) {
+    handleMouseUp() {
+        this.isDragging = false;
+
+        if (this.jointHandle) {
+            this.removeJoint();
+        }
+    }
+
+    removeJoint() {
+        this.world.rapier.removeImpulseJoint(this.jointHandle, true);
+        this.jointHandle = null;
+    }
+
+    handleClick(event) {
         if (this.currentIntersect && this.world.grabberBody) {
             const point = this.currentIntersect.point;
             const rigidBody = this.currentIntersect.object.userData.rigidBody;
 
-            this.world.grabberBody.setNextKinematicTranslation(
+            this.isDragging = true;
+
+            // Create plane from face normal and point
+            this.dragPlane.setFromNormalAndCoplanarPoint(
+                this.camera.instance.getWorldDirection(this.dragPlane.normal),
+                this.currentIntersect.point
+            );
+
+            const rigidBodyPosition = new THREE.Vector3().copy(
+                rigidBody.translation()
+            );
+
+            this.offset
+                .copy(this.currentIntersect.point)
+                .sub(rigidBodyPosition);
+
+            /* this.world.grabberBody.setNextKinematicTranslation(
                 new RAPIER.Vector3(point.x, point.y, point.z)
             );
 
@@ -57,11 +105,11 @@ export default class Raycaster {
                 true
             );
 
-            console.log("Added impluse joint!", this.jointHandle);
+            console.log("Added impluse joint!", this.jointHandle); */
         }
     }
 
-    _checkRaycaster() {
+    checkRaycaster() {
         this.raycaster.setFromCamera(this.pointer, this.camera.instance);
 
         const intersects = this.raycaster.intersectObjects(this.scene.children);
