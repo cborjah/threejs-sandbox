@@ -38,6 +38,12 @@ export default class World {
 
         // Debug
         this.debug = this.experience.debug;
+        this.rapierMesh = new THREE.LineSegments(
+            new THREE.BufferGeometry(),
+            new THREE.LineBasicMaterial({ color: 0xffffff, vertexColors: true })
+        );
+        this.rapierMesh.frustumCulled = false;
+        this.scene.add(this.rapierMesh);
 
         if (this.debug.active) {
             this._setDebugFolders();
@@ -222,6 +228,18 @@ export default class World {
 
             // this.box?.animate();
             this.sphere?.animate();
+            // TODO: Add this to the debug folder
+            // Debug
+            const { vertices, colors } = this.rapier.debugRender();
+            this.rapierMesh.geometry.setAttribute(
+                "position",
+                new THREE.BufferAttribute(vertices, 3)
+            );
+            this.rapierMesh.geometry.setAttribute(
+                "color",
+                new THREE.BufferAttribute(colors, 4)
+            );
+            this.rapierMesh.visible = true;
         }
     }
 }
