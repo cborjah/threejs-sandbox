@@ -219,7 +219,7 @@ export default class World {
         this.sphere = new Sphere({
             radius: 0.5,
             // position: [0, 1, -2],
-            position: [0, 0, 0],
+            position: [0, 0, -2],
             physics: true
         });
 
@@ -263,8 +263,17 @@ export default class World {
             boundingBox.getCenter(targetCenter);
 
             // Define a plane at z = 0 (or based on mesh position)
-            const planeZ = new THREE.Plane(new THREE.Vector3(0, 0, -2), 0);
+            // NOTE: WHY IS THIS AT -2????
+            // const planeZ = new THREE.Plane(new THREE.Vector3(0, 0, -2), 0);
+
+            const planeZ = new THREE.Plane(
+                new THREE.Vector3(0, 0, 1),
+
+                // NOTE: The signed distance is opposite?
+                -targetCenter.z // The signed distance from the origin to the plane.
+            );
             // const planeZ = new THREE.Plane(targetCenter, 0);
+
             const intersectPoint = new THREE.Vector3();
 
             _raycaster.ray.intersectPlane(planeZ, intersectPoint);
