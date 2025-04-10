@@ -188,6 +188,24 @@ export default class World {
             });
     }
 
+    async _loadRapier() {
+        const RAPIER = await import("@dimforge/rapier3d");
+        const gravity = {
+            x: 0.0,
+            y: -9.81,
+            z: 0.0
+        };
+
+        this.rapier = new RAPIER.World(gravity);
+
+        _grabberBody = this.rapier.createRigidBody(
+            RAPIER.RigidBodyDesc.kinematicPositionBased()
+            // RAPIER.RigidBodyDesc.kinematicVelocityBased()
+        );
+
+        this._initializeObjects();
+    }
+
     _initializeDragControls() {
         this._dragControls = new DragControls(
             _draggableObjects,
@@ -233,24 +251,6 @@ export default class World {
         });
     }
 
-    async _loadRapier() {
-        const RAPIER = await import("@dimforge/rapier3d");
-        const gravity = {
-            x: 0.0,
-            y: -9.81,
-            z: 0.0
-        };
-
-        this.rapier = new RAPIER.World(gravity);
-
-        _grabberBody = this.rapier.createRigidBody(
-            RAPIER.RigidBodyDesc.kinematicPositionBased()
-            // RAPIER.RigidBodyDesc.kinematicVelocityBased()
-        );
-
-        this._initializeObjects();
-    }
-
     _updateGrabberBody(event) {
         if (_isDragging && _jointHandle) {
             // if (_isDragging) {
@@ -270,7 +270,7 @@ export default class World {
                 new THREE.Vector3(0, 0, 1),
 
                 // NOTE: The signed distance is opposite?
-                -targetCenter.z // The signed distance from the origin to the plane.
+                -targetCenter.z // The signed distance from the origin to the plane. Set to the center of the draggable object.
             );
             // const planeZ = new THREE.Plane(targetCenter, 0);
 
