@@ -25,11 +25,6 @@ export default class Camera {
         if (this.debug.active) {
             this.setParallaxDebugOptions();
         }
-
-        // window.addEventListener("mousemove", (event) => {
-        //     this.cursor.setX(event.clientX / this.sizes.width - 0.5);
-        //     this.cursor.setY(event.clientY / this.sizes.height - 0.5);
-        // });
     }
 
     setInstance() {
