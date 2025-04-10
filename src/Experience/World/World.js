@@ -1,6 +1,6 @@
 import * as THREE from "three";
 import RAPIER from "@dimforge/rapier3d";
-import { DragControls } from "three/addons/controls/DragControls";
+// import { DragControls } from "three/addons/controls/DragControls";
 
 import Experience from "../Experience";
 // import Box from "./Box";
@@ -48,67 +48,7 @@ export default class World {
             this._setDebugFolders();
         }
 
-        window.addEventListener("mousedown", (event) => {
-            _isDragging = true;
-
-            _mouse.x = (event.clientX / this.sizes.width) * 2 - 1;
-            _mouse.y = -(event.clientY / this.sizes.height) * 2 + 1;
-
-            _raycaster.setFromCamera(_mouse, this.camera);
-
-            const intersects = _raycaster.intersectObjects(
-                _intersectableObjects
-            );
-
-            if (intersects.length) {
-                _currentIntersect = intersects[0];
-
-                const point = _currentIntersect.point; // World coordinates of the point of intersection by the ray
-
-                const boundingBox = new THREE.Box3().setFromObject(
-                    _currentIntersect.object
-                );
-                const targetCenter = new THREE.Vector3();
-                boundingBox.getCenter(targetCenter);
-
-                const targetBody = _currentIntersect.object.userData.rigidBody;
-
-                // Move grabber body to intersected point on object
-                _grabberBody.setTranslation(
-                    new RAPIER.Vector3(point.x, point.y, targetCenter.z)
-                );
-
-                const fixedJointParams = RAPIER.JointData.fixed(
-                    { x: targetCenter.x, y: targetCenter.y, z: targetCenter.z },
-                    { w: 1.0, x: 0.0, y: 0.0, z: 0.0 },
-                    { x: point.x, y: point.y, z: targetCenter.z },
-                    { w: 1.0, x: 0.0, y: 0.0, z: 0.0 }
-                );
-
-                _jointHandle = this.rapier.createImpulseJoint(
-                    fixedJointParams,
-                    _grabberBody,
-                    targetBody,
-                    true
-                );
-            }
-        });
-
-        window.addEventListener("mouseup", (event) => {
-            if (_jointHandle) {
-                this.rapier.removeImpulseJoint(_jointHandle, true);
-                _jointHandle = null;
-            }
-        });
-
-        window.addEventListener("mousemove", (event) => {
-            _mouse.x = (event.clientX / this.sizes.width) * 2 - 1;
-            _mouse.y = -(event.clientY / this.sizes.height) * 2 + 1;
-
-            if (_isDragging) {
-                this._updateGrabberBody(event);
-            }
-        });
+        this._initializeEventHanlders();
     }
 
     _setDebugFolders() {
@@ -148,7 +88,67 @@ export default class World {
         this._initializeObjects();
     }
 
-    _initializeDragControls() {
+    _initializeEventHanlders() {
+        window.addEventListener("mousedown", (event) => {
+            _isDragging = true;
+
+            this._updateMousePosition();
+            _raycaster.setFromCamera(_mouse, this.camera);
+
+            const intersects = _raycaster.intersectObjects(
+                _intersectableObjects
+            );
+
+            if (intersects.length) {
+                _currentIntersect = intersects[0];
+
+                const point = _currentIntersect.point; // World coordinates of the point of intersection by the ray
+                const boundingBox = new THREE.Box3().setFromObject(
+                    _currentIntersect.object
+                );
+                const targetCenter = new THREE.Vector3();
+                boundingBox.getCenter(targetCenter);
+                const targetBody = _currentIntersect.object.userData.rigidBody;
+
+                // Move grabber body to intersected point on object
+                _grabberBody.setTranslation(
+                    new RAPIER.Vector3(point.x, point.y, targetCenter.z)
+                );
+
+                const fixedJointParams = RAPIER.JointData.fixed(
+                    { x: targetCenter.x, y: targetCenter.y, z: targetCenter.z },
+                    { w: 1.0, x: 0.0, y: 0.0, z: 0.0 },
+                    { x: point.x, y: point.y, z: targetCenter.z },
+                    { w: 1.0, x: 0.0, y: 0.0, z: 0.0 }
+                );
+
+                _jointHandle = this.rapier.createImpulseJoint(
+                    fixedJointParams,
+                    _grabberBody,
+                    targetBody,
+                    true
+                );
+            }
+        });
+
+        window.addEventListener("mouseup", (event) => {
+            if (_jointHandle) {
+                this.rapier.removeImpulseJoint(_jointHandle, true);
+                _jointHandle = null;
+            }
+        });
+
+        window.addEventListener("mousemove", (event) => {
+            this._updateMousePosition();
+
+            if (_isDragging) {
+                this._updateGrabberBody(event);
+            }
+        });
+    }
+
+    // Three.js DragControls
+    /* _initializeDragControls() {
         this._dragControls = new DragControls(
             _draggableObjects,
             this.camera,
@@ -167,7 +167,7 @@ export default class World {
             rigidBody.setTranslation(mesh.position, true); // Snap physics body to mesh
             rigidBody.setEnabled(true); // Re-enable physics
         });
-    }
+    } */
 
     _initializeObjects() {
         /* this.box = new Box({
@@ -190,6 +190,11 @@ export default class World {
             position: [0, -1, 0],
             physics: true
         });
+    }
+
+    _updateMousePosition() {
+        _mouse.x = (event.clientX / this.sizes.width) * 2 - 1;
+        _mouse.y = -(event.clientY / this.sizes.height) * 2 + 1;
     }
 
     _updateGrabberBody(event) {
