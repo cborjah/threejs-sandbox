@@ -65,7 +65,6 @@ export default class World {
 
                 const point = _currentIntersect.point; // World coordinates of the point of intersection by the ray
 
-                // const boundingBox = new THREE.Box3();
                 const boundingBox = new THREE.Box3().setFromObject(
                     _currentIntersect.object
                 );
@@ -74,65 +73,11 @@ export default class World {
 
                 const targetBody = _currentIntersect.object.userData.rigidBody;
 
-                // Move grabber body to mouse point
-                /* _grabberBody.setNextKinematicTranslation(
-                    new RAPIER.Vector3(point.x, point.y, point.z)
-                ); */
-
-                /* _grabberBody.setTranslation(
-                    new RAPIER.Vector3(
-                        targetCenter.x,
-                        targetCenter.y,
-                        targetCenter.z
-                    )
-                ); */
-
-                /* _grabberBody.setTranslation(
-                    new RAPIER.Vector3(point.x, point.y, point.z)
-                ); */
-
+                // Move grabber body to intersected point on object
                 _grabberBody.setTranslation(
                     new RAPIER.Vector3(point.x, point.y, targetCenter.z)
                 );
 
-                /* _grabberBody.setNextKinematicTranslation(
-                    new RAPIER.Vector3(
-                        targetCenter.x,
-                        targetCenter.y,
-                        targetCenter.z
-                    )
-                ); */
-
-                /* const rigidBodyPosition = new THREE.Vector3().copy(
-                    targetBody.translation()
-                ); */
-                // const direction = rigidBodyPosition.sub(point);
-                /*                 const sphericalJointParams = RAPIER.JointData.spherical(
-                    new RAPIER.Vector3(0, 0, 0),
-                    direction
-                ); */
-
-                /* const fixedJointParams = RAPIER.JointData.fixed(
-                    { x: 0.0, y: 0.0, z: 0.0 },
-                    { w: 1.0, x: 0.0, y: 0.0, z: 0.0 },
-                    { x: 0.0, y: 0.0, z: 0.0 },
-                    { w: 1.0, x: 0.0, y: 0.0, z: 0.0 }
-                ); */
-
-                /* const fixedJointParams = RAPIER.JointData.fixed(
-                    // { x: 0.0, y: 0.0, z: 0.0 },
-                    { x: point.x, y: point.y, z: targetCenter.z },
-                    // { x: targetCenter.x, y: targetCenter.y, z: targetCenter.z },
-                    // point,
-                    { w: 1.0, x: 0.0, y: 0.0, z: 0.0 },
-                    // { x: 0.0, y: 0.0, z: 0.0 },
-                    // point,
-                    // { x: point.x, y: point.y, z: targetCenter.z },
-                    { x: targetCenter.x, y: targetCenter.y, z: targetCenter.z },
-                    { w: 1.0, x: 0.0, y: 0.0, z: 0.0 }
-                ); */
-
-                // NOTE: Working fixedJointParams
                 const fixedJointParams = RAPIER.JointData.fixed(
                     { x: targetCenter.x, y: targetCenter.y, z: targetCenter.z },
                     { w: 1.0, x: 0.0, y: 0.0, z: 0.0 },
@@ -141,8 +86,6 @@ export default class World {
                 );
 
                 _jointHandle = this.rapier.createImpulseJoint(
-                    // sphericalJointParams,
-                    // prismaticJointParams,
                     fixedJointParams,
                     _grabberBody,
                     targetBody,
@@ -200,7 +143,6 @@ export default class World {
 
         _grabberBody = this.rapier.createRigidBody(
             RAPIER.RigidBodyDesc.kinematicPositionBased()
-            // RAPIER.RigidBodyDesc.kinematicVelocityBased()
         );
 
         this._initializeObjects();
@@ -236,8 +178,7 @@ export default class World {
 
         this.sphere = new Sphere({
             radius: 0.5,
-            // position: [0, 1, -2],
-            position: [0, 0, -2],
+            position: [0, 1, -2],
             physics: true
         });
 
@@ -253,7 +194,6 @@ export default class World {
 
     _updateGrabberBody(event) {
         if (_isDragging && _jointHandle) {
-            // if (_isDragging) {
             _raycaster.setFromCamera(_mouse, this.camera);
 
             const boundingBox = new THREE.Box3().setFromObject(
@@ -262,17 +202,17 @@ export default class World {
             const targetCenter = new THREE.Vector3();
             boundingBox.getCenter(targetCenter);
 
-            // Define a plane at z = 0 (or based on mesh position)
-            // NOTE: WHY IS THIS AT -2????
-            // const planeZ = new THREE.Plane(new THREE.Vector3(0, 0, -2), 0);
-
+            // The Z axis plane is used to limit the translation of the grabber body to the X and Y axes.
             const planeZ = new THREE.Plane(
                 new THREE.Vector3(0, 0, 1),
 
-                // NOTE: The signed distance is opposite?
+                // NOTE: The signed distance is opposite to the distance from the center of the intersected object to the origin.
                 -targetCenter.z // The signed distance from the origin to the plane. Set to the center of the draggable object.
             );
-            // const planeZ = new THREE.Plane(targetCenter, 0);
+
+            // Helper for visualizing intersecting plane.
+            // const planeHelper = new THREE.PlaneHelper(planeZ, 4, 0xffff00);
+            // this.scene.add(planeHelper);
 
             const intersectPoint = new THREE.Vector3();
 
@@ -285,10 +225,6 @@ export default class World {
                     intersectPoint.z
                 )
             );
-
-            /* _grabberBody.setNextKinematicTranslation(
-                new RAPIER.Vector3(_mouse.x, _mouse.y, intersectPoint.z)
-            ); */
         }
     }
 
@@ -297,7 +233,6 @@ export default class World {
 
         if (this.rapier) {
             this.rapier.step();
-            // this._updateGrabberBody();
 
             // this.box?.animate();
             this.sphere?.animate();
