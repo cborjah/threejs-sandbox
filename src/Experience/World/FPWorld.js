@@ -19,7 +19,9 @@ export default class FPWorld {
         // this.scene.add(this.controls.object);
 
         document.addEventListener("click", () => {
-            this.controls.lock();
+            if (!this.controls.isLocked) {
+                this.controls.lock();
+            }
         });
 
         this._initializeObjects();
