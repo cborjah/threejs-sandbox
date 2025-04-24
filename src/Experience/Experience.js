@@ -32,7 +32,9 @@ export default class Experience {
         this.resources = new Resources(sources); // NOTE: Must be initiated immediately after scene is initiated
         this.camera = new Camera();
         this.renderer = new Renderer();
-        this.world = new World();
+        // this.world = new World(); // Default world
+        this.world = new FPWorld();
+
 
         // Window 'resize' event
         this.sizes.on("resize", () => this.resize());
